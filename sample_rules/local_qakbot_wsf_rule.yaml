@@ -1,0 +1,25 @@
+title: Execution from Temporary Mounted ISO/IMG
+id: 5233e5a5-7542-4dcb-b9f3-87667371839c
+description: Attempts to detect the writing of a .wsf from an archive file as seen in QakBot phishing attacks. This may produce false positives for legitimate archive files containing .wsf scripts. We are looking to add exceptions.
+status: experimental
+author: Christian Taillon
+references:
+    - https://medium.com/@christiantaillon/qakbot-detection-duck-hunt-aa0cadb398a7
+logsource:
+    product: windows
+    category: file_event
+detection:
+    selection:
+        TargetFilename|endswith:
+            - '.wsf'
+        TargetFilename|contains:
+            - '\Temp1_'
+    selection2:
+        TargetFilename|contains:
+            - .zip
+            - .RAR
+            - .7z
+    condition: selection and selection2
+falsepositives:
+    - Cases in which a user is accessing a .wsf file within an archive for benign purposes. 
+level: medium
